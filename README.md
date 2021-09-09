@@ -5,9 +5,14 @@
 cd server
 ```
 
+1. create venv
+```
+python3 -m venv venv
+```
+
 2. activate venv
 ```
-source ./env.sh
+source ./venv/bin/activate
 ```
 
 3. install requirements
