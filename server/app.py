@@ -1,6 +1,6 @@
-from flask import Flask, request
+from flask import Flask
 from flask_restx import Api, Resource
-from todo.todo import Todo
+from todo.controller.TodoController import Todo
 
 app = Flask(__name__)
 api = Api(
