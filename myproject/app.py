@@ -1,7 +1,8 @@
-from flask import Flask, url_for, request
+from flask import Flask, url_for, request, session
 from markupsafe import escape
 
 app = Flask(__name__)
+app.secret_key = b'really_secret_key'
 
 @app.route("/")
 def hello_world():
@@ -39,12 +40,25 @@ def show_subpath(subpath):
 
 @app.route("/login", methods=['POST', 'GET'])
 def login():
-    error = None
     if request.method == 'POST':
         return f"POST login request"
     else:
+        # 쿼리 스트링의 key에 해당하는 값이 없으면 nokey로 출력됨
         searchWord = request.args.get('key', 'nokey')
+        session['username'] = 'login'
         return f"POST login request / key : {searchWord}"
+
+@app.route("/cookie/get")
+def cookie_get():
+    # cookies[key]로 사용할 시 값이 없으면 KeyError 발생
+    cookie = "noCookie" if request.cookies.get('username') == None else "yesCookie"
+    return cookie
+
+@app.route('/session/check')
+def session_check():
+    if 'username' in session:
+        return f'로그인 된 유저 : {session["username"]}'
+    return 'Not logged in'
 
 # url_for을 사용해서 url 생성
 with app.test_request_context():
