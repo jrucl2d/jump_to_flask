@@ -1,4 +1,4 @@
-from flask import Flask, url_for
+from flask import Flask, url_for, request
 from markupsafe import escape
 
 app = Flask(__name__)
@@ -36,6 +36,15 @@ def show_money(money):
 @app.route("/path/<path:subpath>")
 def show_subpath(subpath):
     return f"Subpath {escape(subpath)}"
+
+@app.route("/login", methods=['POST', 'GET'])
+def login():
+    error = None
+    if request.method == 'POST':
+        return f"POST login request"
+    else:
+        searchWord = request.args.get('key', 'nokey')
+        return f"POST login request / key : {searchWord}"
 
 # url_for을 사용해서 url 생성
 with app.test_request_context():
