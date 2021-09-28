@@ -1,4 +1,4 @@
-from flask import Flask, url_for, request, session
+from flask import Flask, url_for, request, session, current_app
 from markupsafe import escape
 
 app = Flask(__name__)
@@ -42,7 +42,7 @@ def show_subpath(subpath):
 def login():
     if request.method == 'POST':
         return f"POST login request"
-    else:
+    elif reqquest.method == 'GET':
         # 쿼리 스트링의 key에 해당하는 값이 없으면 nokey로 출력됨
         searchWord = request.args.get('key', 'nokey')
         session['username'] = 'login'
@@ -59,6 +59,12 @@ def session_check():
     if 'username' in session:
         return f'로그인 된 유저 : {session["username"]}'
     return 'Not logged in'
+
+@app.route('/error/logging')
+def error_logging():
+    current_app.logger.info("INFO 레벨로 에러 출력")
+    return "error"
+
 
 # url_for을 사용해서 url 생성
 with app.test_request_context():
