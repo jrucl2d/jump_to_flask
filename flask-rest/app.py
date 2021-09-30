@@ -1,11 +1,10 @@
 from flask import Flask, request
-from flask_restful import Resource, Api, reqparse, abort
+from flask_restful import Resource, Api, abort, marshal_with
+from todo_args import todo_post_args, todo_put_args
+from todo_response import response, CustomResponse
 
 app = Flask(__name__)
 api = Api(app)
-
-todo_post_args = reqparse.RequestParser()
-todo_post_args.add_argument("id", type=str, help="Post Args")
 
 class HelloWorld(Resource):
     def get(self):
@@ -22,13 +21,18 @@ def abort_func(todo_id):
 class TodoSimple(Resource):
     def get(self, todo_id):
         abort_func(todo_id)
-        return {
-            todo_id : todos[todo_id]
-        }
+        data = CustomResponse(todo_id, todos[todo_id])
+        return data.to_response()
     def post(self, todo_id):
         # todos[todo_id] = request.form['data']
         args = todo_post_args.parse_args() # request를 parsing
         todos[todo_id] = args.id
+        return {
+            todo_id : todos[todo_id]
+        }
+    def put(self, todo_id):
+        args = todo_put_args.parse_args()
+        todos[todo_id] = args._id
         return {
             todo_id : todos[todo_id]
         }
