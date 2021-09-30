@@ -1,5 +1,5 @@
 from flask import Flask, request
-from flask_restful import Resource, Api, reqparse
+from flask_restful import Resource, Api, reqparse, abort
 
 app = Flask(__name__)
 api = Api(app)
@@ -14,8 +14,14 @@ class HelloWorld(Resource):
         }
 
 todos = {}
+
+def abort_func(todo_id):
+    if todo_id not in todos:
+        abort(404, message="Todo Id is not valid")
+
 class TodoSimple(Resource):
     def get(self, todo_id):
+        abort_func(todo_id)
         return {
             todo_id : todos[todo_id]
         }
