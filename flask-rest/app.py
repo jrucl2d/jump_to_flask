@@ -1,8 +1,11 @@
 from flask import Flask, request
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
 
 app = Flask(__name__)
 api = Api(app)
+
+todo_post_args = reqparse.RequestParser()
+todo_post_args.add_argument("id", type=str, help="Post Args")
 
 class HelloWorld(Resource):
     def get(self):
@@ -17,7 +20,9 @@ class TodoSimple(Resource):
             todo_id : todos[todo_id]
         }
     def post(self, todo_id):
-        todos[todo_id] = request.form['data']
+        # todos[todo_id] = request.form['data']
+        args = todo_post_args.parse_args() # request를 parsing
+        todos[todo_id] = args.id
         return {
             todo_id : todos[todo_id]
         }
